@@ -1,0 +1,20 @@
+.timer {
+    display: flex;
+    gap: 25px;
+    margin-top: 50px;
+}
+
+.value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 50px;
+}
+.label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 25px;
+}
