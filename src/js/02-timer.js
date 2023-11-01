@@ -9,7 +9,16 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    if (selectedDates.length > 0) {
+      const selectedDate = new Date(selectedDates[0]);
+      const currentDate = new Date();
+
+      if (selectedDate < currentDate) {
+        Notiflix.Notify.warning('Please choose a date in the future');
+      } else {
+        startBtn.disabled = false;
+      }
+    }
   },
 };
 
@@ -32,10 +41,6 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
 const datetimePicker = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('[data-start]');
 const timerFields = {
@@ -47,24 +52,14 @@ const timerFields = {
 
 flatpickr(datetimePicker, options);
 
-datetimePicker.addEventListener('change', function () {
-  const selectedDate = new Date(datetimePicker.value);
-  const currentDate = new Date();
-
-  if (selectedDate < currentDate) {
-    Notiflix.Notify.warning('Please choose a date in the future');
-    startBtn.disabled = true;
-  } else {
-    startBtn.disabled = false;
-    return;
-  }
-});
+startBtn.disabled = true;
 
 startBtn.addEventListener('click', function () {
   const selectedDate = new Date(datetimePicker.value);
-  const currentDate = new Date();
 
   Notiflix.Notify.success('Timer Start');
+  startBtn.disabled = true;
+  datetimePicker.disabled = true;
 
   const timerInterval = setInterval(updateTimer, 1000);
 
@@ -73,6 +68,8 @@ startBtn.addEventListener('click', function () {
     if (timeDiff <= 0) {
       clearInterval(timerInterval);
       Notiflix.Notify.success("Time's up!");
+      startBtn.disabled = false;
+      datetimePicker.disabled = false;
     } else {
       const timeObj = convertMs(timeDiff);
       updateTimerDisplay(timeObj);
